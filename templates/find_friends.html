@@ -1,0 +1,17 @@
+{% extends "layout.html" %} {% block content %} {% for user in users%}
+<div class="users-content">
+  <div class="card" style="width: 18rem;">
+    <div class="card-body">
+      <h5 class="card-title">Hello! This is {{user.username}}</h5>
+      
+      <p class="card-text">
+        Connecting the world with one click!
+      </p>
+      {% if current_user.id != user.id %}
+      <button onclick="window.location.href=`{{url_for('follow', id=user.id)}}`"    type="button" class="btn btn-primary">Follow</button>
+      {% endif %}
+    </div>
+  </div>
+</div>
+
+{% endfor %} {% endblock %}

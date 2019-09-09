@@ -1,0 +1,23 @@
+{% extends "layout.html" %} {% block title %}{% endblock %} {% block content %}
+<div class="home-content">
+  <div class="jumbotron">
+    <h1 class="display-4">Be a Software Developer</h1>
+    <p class="lead">
+      This is where you’ll meet software developers who learned their craft from
+      a variety of sources: from traditional college education, to self-paced
+      video-based platforms, to coding bootcamps and beyond. How we learn to
+      code is one of the most important stories we can share during our
+      developer journeys.
+    </p>
+    <hr class="my-4" />
+    <p>Sign up to become one of our inspirer</p>
+    <a
+      class="btn btn-primary btn-lg"
+      href="{{ url_for('signup') }}"
+      role="button"
+      >Sign up</a
+    >
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'layout.html' %} {% block content %}
+<ul class="list-group w-75 ">
+  <li class="list-group-item list-group-item-success">
+    <div class="card w-50">
+      <div class="card-body">
+        <h5 class="card-title">posted by {{ comment.users.username }}</h5>
+        <p class="card-text">
+          {{ comment.body }}
+        </p>
+        {% if current_user.username == comment.users.username %}
+        <button
+          onclick="window.location.href=`{{url_for('delete_comment', id=comment.id)}}`"
+          type="button"
+          class="btn btn-success"
+        >
+          Delete
+        </button>
+
+        {% endif %}
+      </div>
+    </div>
+  </li>
+
+  <li class="list-group-item list-group-item-primary">
+    <form action="{{url_for('create_comment', id=comment.id)}}" method="POST">
+      {{ form.hidden_tag() }}
+
+      {{ form.body.label }} : {{ form.body() }}
+      {{ form.submit }}
+    </form>
+  </li>
+</ul>
+{% endblock %}
+
+<!-- {{ form.hidden_tag() }}
+                
+                      {{ form.body.label }} : {{ form.body() }}
+                      {{ form.submit }} -->

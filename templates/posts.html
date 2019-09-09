@@ -1,0 +1,146 @@
+{% extends "layout.html" %} {% block title %}{% endblock %} {% block content %}
+<h1>Welcome! {{ current_user.username }}</h1>
+
+<div class="container">
+  <div class="row">
+    <div class="col">
+        <div class="card" style="width: 18rem; margin-top: 30px;margin-left: -70px;">
+            <img class="card-img-top" src="..." alt="Card image cap">
+            <div class="card-body">
+              <h5 class="card-title">Card title</h5>
+              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+              <a href="#" class="btn btn-primary">Go somewhere</a>
+            </div>
+          </div>
+      
+      </div>
+      <div class="col-6">
+        {% for post in posts %}
+        <div class="mycustom-card1">
+          <div class="card w-100">
+            <div class="card-header">posted by {{ post.users.username }}</div>
+            <div class="card-body">
+              <h5 class="card-title">{{ post.title }}</h5>
+              <p class="card-text">{{ post.body }}</p>
+              <button
+                onclick="window.location.href=`{{url_for('single_post',id=post.id)}}`"
+                type="button"
+                class="btn btn-outline-success"
+              >
+                Comment
+              </button>
+              {% if current_user.username == post.users.username %}
+              <button
+                onclick="window.location.href=`{{url_for('delete_post', id=post.id, ref='posts')}}`"
+                type="button"
+                class="btn btn-success"
+              >
+                Delete
+              </button>
+              <button
+                onclick="window.location.href=`{{url_for('edit_post',id=post.id, ref='posts')}}`"
+                type="button"
+                class="btn btn-outline-success"
+              >
+                Edit
+              </button>
+
+              {% endif %}
+            </div>
+            <div class="card-footer text-muted ">
+              <div class="row">
+                <div class="col">
+                  created {{ "{:%Y-%m-%d %H:%M}".format(post.created) }}
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                  <i
+                    class="fa fa-eye fa-lg"
+                    style="color:rgb(235, 137, 189)"
+                    aria-hidden="true"
+                    ><span class="badge badge-pill badge-primary">{{
+                      post.view_count
+                    }}</span></i
+                  >
+                </div>
+                <div class="col-md-4">
+                  {% if current_user.has_flagged_post(post)%}
+                  <a
+                    href="{{url_for('like_action', id=post.id,action='unflag',ref='posts')}}"
+                  >
+                    <i
+                      class="fa fa-flag fa-lg"
+                      style="color: rgb(224, 151, 14)"
+                      aria-hidden="true"
+                    >
+                      <span class="badge badge-pill badge-primary">{{
+                        post.flags.count()
+                      }}</span>
+                    </i>
+                  </a>
+                  {% else %}
+                  <a
+                    href="{{url_for('like_action', id=post.id,action='flag',ref='posts')}}"
+                  >
+                    <i
+                      class="fa fa-flag fa-lg"
+                      style="color: rgb(224, 151, 14)"
+                      aria-hidden="true"
+                    >
+                      <span class="badge badge-pill badge-primary">{{
+                        post.flags.count()
+                      }}</span>
+                    </i>
+                  </a>
+                  {% endif%}
+                </div>
+                <div class="col-md-4">
+                  {% if current_user.has_liked_post(post)%}
+                  <a
+                    href="{{url_for('like_action' , id=post.id, action ='unlike',ref='posts')}}"
+                    ><i
+                      class="fa fa-heart-o fa-lg"
+                      aria-hidden="true"
+                      style="color: rgb(247, 55, 87)"
+                      ><span class="badge badge-pill badge-primary">{{
+                        post.likes.count()
+                      }}</span></i
+                    >
+                  </a>
+                  {% else %}
+                  <a
+                    href="{{url_for('like_action' , id=post.id, action ='like',ref='posts')}}"
+                  >
+                    <i
+                      class="fa fa-heart-o fa-lg"
+                      aria-hidden="true"
+                      style="color: rgb(81, 144, 238)"
+                      ><span class="badge badge-pill badge-primary">{{
+                        post.likes.count()
+                      }}</span></i
+                    >
+                  </a>
+                  {% endif %}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <div class="col">
+          <div class="card" style="width: 18rem;margin-top:30px;">
+              <img class="card-img-top" src="..." alt="Card image cap">
+              <div class="card-body">
+                <h5 class="card-title">Card title</h5>
+                <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                <a href="#" class="btn btn-primary">Go somewhere</a>
+              </div>
+            </div>
+      </div>
+    </div>
+  </div>
+
+  {% endblock %}
+</div>

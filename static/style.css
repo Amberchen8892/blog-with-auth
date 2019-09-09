@@ -1,0 +1,137 @@
+body,
+html {
+  width: 100vw;
+  height: 100vh;
+  background-color: #7395AE
+}
+h1 {
+  color: #0D47A1;
+  text-align: center;
+  font-weight: 300px;
+}
+.jumbotron {
+  width: 60vw;
+  border-radius: 10px;
+  background-color: #CFD8DC;
+}
+.jumbo {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.footer {
+  position: relative;
+  bottom: 0;
+  width: 100%;
+
+  /* top: end; */
+  /* Set the fixed height of the footer here */
+  height: 60px;
+  background-color: #f5f5f5;
+}
+.jumbotron {
+  margin-top: 50px;
+}
+.signup_form {
+  text-align: center;
+}
+.mycustom-card {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+.comment-box {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+.mycustom-card1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 30px;
+}
+.post-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+.list-group-item {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 75vw;
+  border-radius: 10px;
+  margin-top: 10px;
+}
+
+.listgroupitem1 {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 20px;
+}
+
+html,
+body {
+  height: 100%;
+}
+
+.page-content {
+  flex: 1 0 auto;
+}
+
+#sticky-footer {
+  position: sticky;
+  top: 0;
+}
+.home-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.navbar-custom{
+    background-color: #557A95;
+    margin-top: 30px
+    
+}
+.btn-primary {
+    background-color:#0D47A1;
+    border-color: #0D47A1;
+}
+.btn-primary:hover{
+    background-color: #557A95
+
+}
+
+.sigup-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.btn-success{
+    background-color:#0D47A1;
+    border-color: #0D47A1;
+}
+.btn-success:hover{
+    background-color: #557A95;
+    border-color: #0D47A1;
+
+}
+.signin-content{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.btn-outline-success{
+    color:#0D47A1;
+    border-color: #0D47A1;
+}
+.btn-outline-success:hover{
+    background-color: #557A95;
+    border-color: #0D47A1;
+}
