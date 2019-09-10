@@ -3,17 +3,33 @@
 
 <div class="container">
   <div class="row">
-    <div class="col">
-        <div class="card" style="width: 18rem; margin-top: 30px;margin-left: -70px;">
-            <img class="card-img-top" src="..." alt="Card image cap">
+      <div class="col">
+          <div class="card" style="width: 18rem; margin-left:-70px; margin-top: 30px">
+            <img class="card-img-top" src="/static/images/profile1.jpg" alt="Card image cap" />
             <div class="card-body">
-              <h5 class="card-title">Card title</h5>
-              <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
+              <h5 class="card-title" style="color: rgb(245, 98, 40)">Hi, My name is {{ current_user.username }} </h5>
+              <p class="card-text">
+                Hit follow button below to build your network!
+                Be one of my INSPIRER.
+              </p>
+              <a href="#" class="btn btn-primary">Follow</a>
             </div>
           </div>
-      
-      </div>
+          <div class="jumbotron" style="width: 18rem; margin-left:-70px">
+              <h1 class="display-4">Your INSPIRER</h1>
+              <p class="lead">This is our journeys</p>
+              <hr class="my-4">
+              <div class="card" style="width: 15rem; margin-left:-10px ">
+                  <img class="card-img-top" src="..." alt="Card image cap">
+                  <div class="card-body">
+                    <h5 class="card-title">Card title</h5>
+                    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
+                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                  </div>
+                </div>
+              
+            </div>
+        </div>
       <div class="col-6">
         {% for post in posts %}
         <div class="mycustom-card1">

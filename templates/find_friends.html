@@ -1,6 +1,7 @@
-{% extends "layout.html" %} {% block content %} {% for user in users%}
+{% extends "layout.html" %} {% block content %} 
 <div class="users-content">
-  <div class="card" style="width: 18rem;">
+    {% for user in users%}
+  <div class="card singlecard" style="width: 18rem;">
     <div class="card-body">
       <h5 class="card-title">Hello! This is {{user.username}}</h5>
       
@@ -12,6 +13,7 @@
       {% endif %}
     </div>
   </div>
+  {% endfor %}
 </div>
 
-{% endfor %} {% endblock %}
+ {% endblock %}

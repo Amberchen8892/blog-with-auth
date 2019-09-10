@@ -29,7 +29,7 @@ def load_user(id):
 POSTGRES = {
     'user': 'phuong',
     'pw': '123',
-    'db': 'blog',
+    'db': 'real_blog',
     'host': 'localhost',
     'port': 5432,
 }
@@ -38,6 +38,12 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:\
 %(port)s/%(db)s' % POSTGRES
 
 # setting class
+class Follows (db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    follower_id = db.Column(db.Integer,db.ForeignKey('users.id'), unique=True)
+    followed_id =db.Column(db.Integer,db.ForeignKey('users.id'), unique=True)
+
+
 class Users(UserMixin, db.Model):
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String, nullable=False)
@@ -47,10 +53,8 @@ class Users(UserMixin, db.Model):
     comments = db.relationship('Comments',cascade="all, delete-orphan", backref='users', lazy='dynamic')
     likes = db.relationship('PostLikes',  backref='users', lazy='dynamic')
     flags = db.relationship('Flags', backref='users', lazy='dynamic')
-    # followed = db.relationship("Users", foreign_keys=[
-    #                            followed_id], backref='users')
-    # follower = db.relationship("Users", foreign_keys=[
-    #                            follower_id], backref='users')
+    follower = db.relationship('Follows', foreign_keys=[Follows.follower_id], backref=db.backref('follower', lazy='joined'),lazy='dynamic',cascade="all, delete-orphan")
+    followed = db.relationship('Follows', foreign_keys=[Follows.followed_id], backref=db.backref('followed', lazy='joined'),lazy='dynamic',cascade="all, delete-orphan")
 
     
     
@@ -79,6 +83,7 @@ class Users(UserMixin, db.Model):
     def has_flagged_post(self,post):
         return Flags.query.filter_by(user_id=self.id,post_id=post.id ).count()
 
+    
 class Posts (db.Model):
     id = db.Column(db.Integer, primary_key=True)
     title = db.Column(db.String, nullable=False)
@@ -110,16 +115,6 @@ class Flags(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     post_id= db.Column(db.Integer, db.ForeignKey('posts.id'))
 
-class Follow(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    followed_id = db.Column(db.Integer, db.ForeignKey(
-        'users.id'), nullable=False)
-    follower_id = db.Column(db.Integer, db.ForeignKey(
-        'users.id'), nullable=False)
-    followed = db.relationship("Users", foreign_keys=[
-                               followed_id], backref='followed')
-    follower = db.relationship("Users", foreign_keys=[
-                               follower_id], backref='follower')
 
 db.create_all()
 
@@ -221,7 +216,11 @@ def profile():
         db.session.add(p)
         db.session.commit()
         return redirect(url_for('profile'))
-    return render_template('profile.html', form = form, posts=posts)
+    friends= Follows.query.filter_by(follower_id=current_user.id).all()
+    # print("==========", friends)
+    # for i in friends:
+    #     print("======", i.followed.username)
+    return render_template('profile.html', form = form, posts=posts, friends=friends)
 
 @app.route('/posts')
 @login_required
@@ -301,7 +300,11 @@ def like_action(id, action):
     ref = request.args.get('ref')
     form = New_comment()
     post=Posts.query.filter_by(id=id).first()
-    
+    for i in post.likes: 
+        # print('==============',i.user_id)
+        user_likes = Users.query.filter_by(id=i.user_id).all()
+        for i in user_likes: 
+            print('=======', i.username)    
     # p.likes.count()
     if action == 'like':
         current_user.like(post)
@@ -343,7 +346,7 @@ def like_action(id, action):
 
 
 
-@app.route('/editcomment/<id>')
+@app.route('/editcomment/<id>', methods=['POST', 'GET'])
 @login_required
 def edit_comment(id):
     form = New_comment()
@@ -354,10 +357,10 @@ def edit_comment(id):
         return redirect(url_for("posts"))
     else:
         if request.method == 'POST':
-            comment.body = request.body.data
+            comment.body = form.body.data
             comment.updated= datetime.now()
             db.session.commit()
-            return redirect(url_for('edit_comment'))
+            return redirect(url_for('edit_comment', id=id))
     post = Posts.query.filter_by(id=post_id)
     return render_template('editcomment.html', comment=comment, post=post, form=form)
     
@@ -404,15 +407,15 @@ def follow(id):
     if current_user.id == int(id):
         flash("You can't follow yourself")
     else:
-        has_follow = Follow.query.filter_by(
+        has_follow = Follows.query.filter_by(
             followed_id=id, follower_id=current_user.id).first()
         if has_follow:
             db.session.delete(has_follow)
         else:
-            new_follow = Follow(followed_id=id, follower_id=current_user.id)
+            new_follow = Follows(followed_id=id, follower_id=current_user.id)
             db.session.add(new_follow)
         db.session.commit()
-    
+   
     return redirect(url_for("profile", id=id))
 
 

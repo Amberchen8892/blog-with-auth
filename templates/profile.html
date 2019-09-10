@@ -14,6 +14,23 @@
           <a href="#" class="btn btn-primary">Follow</a>
         </div>
       </div>
+      <div class="jumbotron" style="width: 18rem; margin-left:-70px">
+          <h1 class="display-4">Your INSPIRER</h1>
+          <p class="lead">This is our journeys</p>
+          <hr class="my-4">
+          {% for i in friends%}
+          <div class="card" style="width: 15rem; margin-left:-10px ">
+              <img class="card-img-top" src="/static/images/join-community.png" alt="Card image cap">
+              <div class="card-body">
+                
+                <h5 class="card-title">Hi, my name is {{i.followed.username}}</h5>
+                <p class="card-text"> </p>
+                <a href="#" class="btn btn-primary">Unfollow</a>
+              </div>
+            </div>
+            {% endfor %}
+          
+        </div>
     </div>
     <div class="col-6">
       <div class="jumbo">
@@ -161,7 +178,7 @@
               <a href="#" class="btn btn-primary">Go somewhere</a>
             </div>
           </div>
-       
+      
     </div>
   </div>
 
