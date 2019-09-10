@@ -134,6 +134,7 @@ class Signup(FlaskForm):
         if Users.query.filter_by(email=field.data).first():
             raise ValidationError('Your email has been registered')
 
+
 class Login(FlaskForm):
     email = StringField('Email', validators=[DataRequired('Please enter your email address'),])
     password = PasswordField('Password', validators=[DataRequired()])
@@ -201,8 +202,6 @@ def logout():
     return redirect(url_for('login'))
 
 
-    
-
 @app.route('/profile', methods=['POST', 'GET'])
 @login_required
 def profile():
@@ -247,7 +246,7 @@ def edit_post(id):
                 return redirect(url_for("profile"))
             elif ref == 'posts':
                 return redirect(url_for("posts"))
-        # return redirect(url_for('posts'))
+        return redirect(url_for('posts'))
     return render_template('editpost.html', form = form, post=post )
 
 @app.route('/deletepost/<id>', methods=['GET'])
@@ -417,6 +416,39 @@ def follow(id):
         db.session.commit()
    
     return redirect(url_for("profile", id=id))
+
+
+class Edit_User(FlaskForm):
+    username = StringField('Username',
+    validators=[DataRequired('Please enter your username'), Length(min =3, max= 100, message="at least 3 chars and at most 100 chars") ])
+    email = StringField('Email')
+    password = PasswordField('Password', validators=[DataRequired('Please enter your password'), EqualTo('confirm', message = 'Password must match')])
+    confirm = PasswordField('Repeat Password')
+    submit = SubmitField('Edit_User')
+    def validate_username(self, field):
+        if Users.query.filter_by(username=field.data).first():
+            raise ValidationError('Your username has been registered')
+    # def validate_email(self, field):
+    #     if Users.query.filter_by(email=field.data).first():
+    #         raise ValidationError('Your email has been registered')
+
+
+@app.route('/edit_user', methods = ['POST', 'GET'])
+@login_required
+def edit_user():
+    form = Edit_User()
+    user = Users.query.filter_by(id=current_user.id).first()
+    if request.method == 'POST':
+        if form.validate_on_submit():
+            user.username = form.username.data
+            user.set_password(form.password.data)
+            db.session.commit()
+            return redirect(url_for('profile'))
+        else:
+            print(form.errors)
+            for field_name, errors in form.errors.items():
+                flash(errors)
+    return render_template('edit_user.html', form = form)
 
 
 if __name__ == '__main__':

@@ -28,7 +28,7 @@ The user can see full details of each post by clicking on the post’s title.
 
 [x] The user should not be able to edit/delete comments that do not belong to him
 
-##Optional:
+## Optional:
 [x] The user can see posts that belong to a specific author only when clicking on that author name.
 The user should be able to see a “top bloggers” page (by clicking on a link on navbar), which have statistics on top posters, top commenters, top populars (most up vote)
 Follow feature

@@ -3,15 +3,27 @@
 <div class="container">
   <div class="row">
     <div class="col">
-      <div class="card" style="width: 18rem; margin-left:-70px; margin-top: 50px">
-        <img class="card-img-top" src="/static/images/profile1.jpg" alt="Card image cap" />
+      <div
+        class="card"
+        style="width: 18rem; margin-left:-70px; margin-top: 50px"
+      >
+        <img
+          class="card-img-top"
+          src="/static/images/profile1.jpg"
+          alt="Card image cap"
+        />
         <div class="card-body">
-          <h5 class="card-title" style="color: rgb(245, 98, 40)">Hi, My name is {{ current_user.username }} </h5>
+          <h5 class="card-title" style="color: rgb(245, 98, 40)">
+            Hi, My name is {{ current_user.username }}
+          </h5>
           <p class="card-text">
-            Hit follow button below to build your network!
-            Be one of my INSPIRER.
+            Hit follow button below to build your network! Be one of my
+            INSPIRER.
           </p>
           <a href="#" class="btn btn-primary">Follow</a>
+          <a href="{{ url_for('edit_user') }}" class="btn btn-primary"
+            >Edit Profile</a
+          >
         </div>
       </div>
       <div class="jumbotron" style="width: 18rem; margin-left:-70px">
@@ -118,7 +130,9 @@
                   </i>
                 </a>
                 {% else %}
-                <a href="{{url_for('like_action', id=post.id,action='flag', ref='profile')}}">
+                <a
+                  href="{{url_for('like_action', id=post.id,action='flag', ref='profile')}}"
+                >
                   <i
                     class="fa fa-flag fa-lg"
                     style="color: rgb(224, 151, 14)"
@@ -167,6 +181,7 @@
       {% endfor %}
     </div>
     <div class="col">
+<<<<<<< HEAD
     
       
       
@@ -179,6 +194,19 @@
             </div>
           </div>
       
+=======
+      <div class="card" style="width: 18rem;margin-top: 50px">
+        <img class="card-img-top" src="..." alt="Card image cap" />
+        <div class="card-body">
+          <h5 class="card-title"></h5>
+          <p class="card-text">
+            Some quick example text to build on the card title and make up the
+            bulk of the card's content.
+          </p>
+          <a href="#" class="btn btn-primary">Go somewhere</a>
+        </div>
+      </div>
+>>>>>>> 07531a34eff98bc9f9a663d61156dd432f3bd552
     </div>
   </div>
 
