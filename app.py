@@ -84,7 +84,20 @@ class Users(UserMixin, db.Model):
     def has_flagged_post(self,post):
         return Flags.query.filter_by(user_id=self.id,post_id=post.id ).count()
 
+    # def follow(self, user_id):
+    #     if not self.check(user_id):
+    #         follow=Follows(follower_id=self.id, followed_id=user_id)
+    #         db.session.add(follow)
+    # def unfollow(self, user_id):
+    #     if self.check(user_id):
+    #        Follows.query.filter_by(follower_id=self.id, followed_id=user_id).delete() 
+    # def check(self, user_id):
+    #     return Follows.query.filter_by(follower_id=self.id, followed_id= user_id).count > 0
     
+    def check(self, user_id):
+        if Follows.query.filter_by(follower_id=self.id, followed_id= user_id).first():
+            return True
+        return False
 
     
 class Posts (db.Model):
@@ -222,6 +235,12 @@ def profile():
     # print("==========", friends)
     # for i in friends:
     #     print("======", i.followed.username)
+    followers = Follows.query.filter_by(followed_id=current_user.id).count()
+    followings = Follows.query.filter_by(follower_id=current_user.id).count()
+    # is_followed = Follows.query.filter_by(
+    #     followed_id=current_id, follower_id=current_user.id).first()
+    print('=======', followings)
+    
     return render_template('profile.html', form = form, posts=posts, friends=friends)
 
 @app.route('/posts')
@@ -366,9 +385,7 @@ def edit_comment(id):
     post = Posts.query.filter_by(id=post_id)
     return render_template('editcomment.html', comment=comment, post=post, form=form)
     
-@app.route('/test')
-def test():
-    return render_template('test.html')
+
 
 
 @app.route('/comments/<id>/delete', methods=['GET'])
@@ -391,10 +408,11 @@ def most_popular():
     return render_template("most_popular.html", posts=posts)
 
 @app.route('/people')
+@login_required
 def find_friends():
     users= Users.query.all()
     friends= Follows.query.filter_by(follower_id=current_user.id).all()
-    return render_template('find_friends.html', users=users)
+    return render_template('find_friends.html', users=users, friends=friends)
 
 
 @app.route('/friends')
@@ -405,24 +423,32 @@ def friends():
     return render_template('profile.html', friends=friends)
 
 
-
+# @app.route('/user/<id>/<action>')
+# @login_required
+# def follow(id, action):
+#     user = Users.query.filter_by(id=id).first()
+#     if action == "follow":
+#        current_user.follow(user)
+#        db.session.commit()
+#     if action == "unfollow":
+#        current_user.unfollow(user)
+#        db.session.commit()
+#     return redirect(url_for("profile",id=id))
 
 @app.route('/user/<id>/follow', methods=['POST', 'GET'])
 @login_required
 def follow(id):
-    if current_user.id == int(id):
-        flash("You can't follow yourself")
-    else:
         has_follow = Follows.query.filter_by(
             followed_id=id, follower_id=current_user.id).first()
         if has_follow:
             db.session.delete(has_follow)
+            db.session.commit()
         else:
             new_follow = Follows(followed_id=id, follower_id=current_user.id)
             db.session.add(new_follow)
         db.session.commit()
    
-    return redirect(url_for("profile", id=id))
+        return redirect(url_for("profile", id=id))
 
 
 class Edit_User(FlaskForm):
