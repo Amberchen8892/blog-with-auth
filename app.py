@@ -8,12 +8,14 @@ from wtforms import StringField, SubmitField,PasswordField
 from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Length
 from datetime import datetime
 from sqlalchemy import desc
+import os
 
 
 # setting app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'thisissecret'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 login = LoginManager(app)
 # login.init_app(app)
 db = SQLAlchemy(app)
@@ -34,8 +36,8 @@ POSTGRES = {
     'port': 5432,
 }
 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:\
-%(port)s/%(db)s' % POSTGRES
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:\
+# %(port)s/%(db)s' % POSTGRES
 
 # setting class
 class Follows (db.Model):
