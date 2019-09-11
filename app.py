@@ -9,17 +9,33 @@ from wtforms.validators import DataRequired, Email, EqualTo, ValidationError, Le
 from datetime import datetime
 from sqlalchemy import desc
 import os
-
+import requests
+from flask_mail import Mail, Message
 
 # setting app
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'thisissecret'
 app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
-app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+# app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
 login = LoginManager(app)
 # login.init_app(app)
 db = SQLAlchemy(app)
 migrate = Migrate(app,db)
+
+# to setup the email
+mail_settings = {
+    "MAIL_SERVER": 'smtp.gmail.com',
+    "MAIL_PORT": 465,
+    "MAIL_USE_TLS": False,
+    "MAIL_USE_SSL": True,
+    "MAIL_USERNAME": os.environ['GMAIL'],
+    "MAIL_PASSWORD": os.environ['GPASS']
+}
+
+
+app.config.update(mail_settings)
+mail = Mail(app)
+
 
 
 # must have for login
@@ -35,9 +51,11 @@ POSTGRES = {
     'host': 'localhost',
     'port': 5432,
 }
-
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:\
-# %(port)s/%(db)s' % POSTGRES
+if 'DATABASE_URL' in os.environ:
+    app.config['SQLALCHEMY_DATABASE_URI'] = os.environ['DATABASE_URL']
+else:
+    app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:\
+%(port)s/%(db)s' % POSTGRES
 
 # setting class
 class Follows (db.Model):
@@ -93,9 +111,12 @@ class Users(UserMixin, db.Model):
     #        Follows.query.filter_by(follower_id=self.id, followed_id=user_id).delete() 
     # def check(self, user_id):
     #     return Follows.query.filter_by(follower_id=self.id, followed_id= user_id).count > 0
-    
-    def check(self, user_id):
-        if Follows.query.filter_by(follower_id=self.id, followed_id= user_id).first():
+
+
+
+    #  check if current user is a follower
+    def check(self,follower_id, followed_id):
+        if Follows.query.filter_by(follower_id=follower_id, followed_id= followed_id).first():
             return True
         return False
 
@@ -166,6 +187,26 @@ class New_comment(FlaskForm):
     submit = SubmitField('Comment')
 
 
+
+def send_simple_message(username, email):
+        msg = Message(subject="Hello",
+                    sender=app.config.get("annguyen2682@gmail.com"),
+                    recipients=["myphuong8892@gmail.com"], # replace with your email for testing
+                    body="This is a test email I sent with Gmail and Python!")
+        mail.send(msg)
+
+        return "ok"
+	# return requests.post(
+	# 	"https://api.mailgun.net/v3/sandboxb64fb9303d60465089d76a6b1764895d.mailgun.org/messages",
+	# 	auth=("api", "9897e312cb72d43aa18ff14d4dcc53bd-c27bf672-0b821e12"),
+	# 	data={"from": "Excited User <mailgun@sandboxb64fb9303d60465089d76a6b1764895d.mailgun.org>",
+	# 		"to": ["myphuong8892@gmail.com"],
+	# 		"subject": "Hello",
+	# 		"text": f"someone just created account with username: {username} and email: {email}"})
+
+
+
+
 # setting route
 @app.route('/')
 def home():
@@ -182,6 +223,7 @@ def signup():
             db.session.add(u)
             db.session.commit()
             login_user(u)
+            # send_simple_message(u.username, u.email)
             return redirect(url_for('profile'))
         else:
             print(form.errors)
@@ -240,8 +282,8 @@ def profile():
     # is_followed = Follows.query.filter_by(
     #     followed_id=current_id, follower_id=current_user.id).first()
     print('=======', followings)
-    
-    return render_template('profile.html', form = form, posts=posts, friends=friends)
+    phuong= Follows.query.filter_by(followed_id=current_user.id).all()
+    return render_template('profile.html', form = form, posts=posts, friends=friends, followings=followings, followers=followers, phuong=phuong)
 
 @app.route('/posts')
 @login_required
@@ -482,6 +524,8 @@ def edit_user():
             for field_name, errors in form.errors.items():
                 flash(errors)
     return render_template('edit_user.html', form = form)
+
+
 
 
 if __name__ == '__main__':

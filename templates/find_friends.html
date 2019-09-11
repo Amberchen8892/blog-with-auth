@@ -10,7 +10,7 @@
       </p>
       {% if current_user.id != user.id %}
       
-      <button onclick="window.location.href=`{{url_for('follow', id=user.id)}}`"    type="button" class="btn btn-primary">Follow</button>
+      <button onclick="window.location.href=`{{url_for('follow', id=user.id)}}`"    type="button" class="btn btn-primary">{{"Unfollow" if user.check(current_user.id, user.id) else "Follow"}}</button>
       
       {% endif %}
     </div>
