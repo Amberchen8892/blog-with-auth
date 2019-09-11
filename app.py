@@ -39,9 +39,9 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://%(user)s:%(pw)s@%(host)s:\
 
 # setting class
 class Follows (db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    follower_id = db.Column(db.Integer,db.ForeignKey('users.id'), unique=True)
-    followed_id =db.Column(db.Integer,db.ForeignKey('users.id'), unique=True)
+    
+    follower_id = db.Column(db.Integer,db.ForeignKey('users.id'), primary_key=True) 
+    followed_id =db.Column(db.Integer,db.ForeignKey('users.id'), primary_key=True)
 
 
 class Users(UserMixin, db.Model):
@@ -82,6 +82,8 @@ class Users(UserMixin, db.Model):
             Flags.query.filter_by(user_id=self.id,post_id=post.id).delete()
     def has_flagged_post(self,post):
         return Flags.query.filter_by(user_id=self.id,post_id=post.id ).count()
+
+    
 
     
 class Posts (db.Model):
@@ -390,6 +392,7 @@ def most_popular():
 @app.route('/people')
 def find_friends():
     users= Users.query.all()
+    friends= Follows.query.filter_by(follower_id=current_user.id).all()
     return render_template('find_friends.html', users=users)
 
 
@@ -399,6 +402,9 @@ def friends():
     friends= Users.followed.all()
     print("Phuongggg", friends)
     return render_template('profile.html', friends=friends)
+
+
+
 
 @app.route('/user/<id>/follow', methods=['POST', 'GET'])
 @login_required
