@@ -28,15 +28,15 @@
       </div>
       {% if followings > 0 %}
       <div class="jumbotron" style="width: 18rem; margin-left:-70px">
-          <h1 class="display-4">Your INSPIRER</h1>
-          <p class="lead">This is our journeys</p>
+          <h1 class="display-4" style="font-family: 'Fjalla One', sans-serif;"> INSPIRERS</h1>
+          <p class="lead">You have <span style="color:rgb(74, 188, 241)">{{followings}}</span> inspirers in your network </p>
           <hr class="my-4">
           {% for i in friends%}
           <div class="card" style="width: 15rem; margin-left:-10px; margin-bottom: 20px ">
               <img class="card-img-top" src="/static/images/join-community.png" alt="Card image cap">
               <div class="card-body">
                 
-                <h5 class="card-title">Hi, my name is {{i.followed.username}}</h5>
+                <h5 class="card-title">Hi, my name is <span style="color:#FA5477">{{i.followed.username}}</span></h5>
                 <p class="card-text"> </p>
                 
                 <button onclick="window.location.href=`{{url_for('follow', id=i.followed.id)}}`"    type="button" class="btn btn-primary">{{"Unfollow" if  current_user.check(current_user.id,i.followed.id) else "follow"}}</button>
@@ -186,15 +186,15 @@
     <div class="col">
         {% if followers > 0 %}
       <div class="jumbotron" style="width: 18rem; margin-left: 0px">
-          <h1 class="display-4">Your INSPIRER</h1>
-          <p class="lead">This is our journeys</p>
+          <h1 class="display-4" style="color:rgb(170, 42, 63); font-family: 'Bree Serif', serif"> BE INSPIRER</h1>
+          <p class="lead"> You are a inspirer of <span style="color:rgb(50, 226, 188)">{{followers}}</span></p>
           <hr class="my-4">
           {% for i in phuong%}
           <div class="card" style="width: 15rem; margin-left:-10px; margin-bottom: 20px ">
               <img class="card-img-top" src="/static/images/join-community.png" alt="Card image cap">
               <div class="card-body">
                 
-                <h5 class="card-title">Hi, my name is {{i.follower.username}}</h5>
+                <h5 class="card-title">Hi, my name is <span style="color:rgb(241, 75, 83)">{{i.follower.username}}</span> </h5>
                 <p class="card-text"> </p>
                 
                 <button onclick="window.location.href=`{{url_for('follow', id=i.follower.id)}}`"    type="button" class="btn btn-primary">{{"Unfollow" if  current_user.check(current_user.id,i.follower.id) else "follow"}}</button>
